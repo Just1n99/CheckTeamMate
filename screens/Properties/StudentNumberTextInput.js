@@ -81,6 +81,7 @@ const StudentNumberTextInput = ({
       <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
       <TextInput
         onChangeText={handleInputChange}
+        keyboardType="numeric"
         value={studentNumber}
         style={styles.textStyle}
         onBlur={onBlur}

@@ -1,16 +1,21 @@
 import React, {useState} from 'react';
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, TextInput, Alert } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import UniversityTextInput from "./Properties/UniversityTextInput";
 import StudentNumberTextInput from "./Properties/StudentNumberTextInput";
 import PhoneNumberTextInput from "./Properties/PhoneNumberTextInput";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
 const WINDOW_WIDHT = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 export default function SignInPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
   const navigation = useNavigation()
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -44,6 +49,25 @@ export default function SignInPage() {
     }
   };
 
+  const onSignUp = async () => {
+    const auth = getAuth();
+    const firestore = getFirestore();
+
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((result) => {
+      const user = auth.currentUser;
+      const usersCollection = collection(firestore, 'users');
+      const userDoc = doc(usersCollection, user.uid); 
+      setDoc(userDoc, {
+        email
+      })
+      console.log(result)
+    })
+    .catch((error) => {
+        Alert.alert("Sign Up Error", "Email already in use");
+    })
+};
+
   return (
     <View style={styles.container}>
       <StatusBar style={"dark"}></StatusBar>
@@ -60,10 +84,23 @@ export default function SignInPage() {
         <StudentNumberTextInput onDone = {handleStudentNumberDone}/>
         <PhoneNumberTextInput onDone={handlePhoneNumberDone} />
       </View>
+      <View>
+      <TextInput 
+            autoCapitalize="none"
+            placeholder="email"
+            onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput 
+            autoCapitalize="none"
+            placeholder="password"
+            secureTextEntry={true}
+            onChangeText={(text) => setPassword(text)}
+            />
+      </View>
       <View style={styles.BtnContainter}>
         <TouchableOpacity disabled={buttonDisabled}>
           <View style={{...styles.logInBtn, backgroundColor: signInBtnColor}}>
-            <Text style={styles.logInText}>가입하기</Text>
+            <Text style={styles.logInText} onPress={onSignUp}>가입하기</Text>
           </View>
         </TouchableOpacity>
       </View>

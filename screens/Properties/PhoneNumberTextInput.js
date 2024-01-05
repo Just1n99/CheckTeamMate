@@ -79,6 +79,7 @@ const PhoneNumberTextInput = ({
       <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
       <TextInput
         onChangeText={handleInputChange}
+        keyboardType="numeric"
         value={phoneNumber}
         style={styles.textStyle}
         onBlur={onBlur}
