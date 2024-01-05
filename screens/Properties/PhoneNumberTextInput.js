@@ -1,5 +1,6 @@
-import React, {useState, useRef} from 'react';
-import {Animated, Easing, TextInput, StyleSheet} from 'react-native';
+//회원가입 화면 전화번호 입력창
+import React, { useState, useRef } from 'react';
+import { Animated, Easing, TextInput, StyleSheet } from 'react-native';
 
 const PhoneNumberTextInput = ({
   label = '전화번호',
@@ -7,19 +8,17 @@ const PhoneNumberTextInput = ({
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
-  onDone }) => {
-
+  onValidInput }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [activated, setActivated] = useState(false); // add this state
-
   const animatedValue = useRef(new Animated.Value(0));
 
   const handleInputChange = (text) => {
     setPhoneNumber(text);
-    if (text.length == 0){
-      setActivated(false); // set activated to false when input is empty
-    } else{
-      setActivated(true); // set activated to true when input is not empty
+    if (text.length == 10) {    // valid input인지 판별
+      onValidInput(true);       //valid할 경우 true 전달
+    } 
+    else {
+      onValidInput(false);    //아닐 경우 false 전달
     }
   };
 
@@ -51,6 +50,7 @@ const PhoneNumberTextInput = ({
     }),
     borderBottomWidth: 1.5,
   }
+
   const onFocus = () => {
     Animated.timing(animatedValue?.current, {
       toValue: 1,
@@ -69,9 +69,6 @@ const PhoneNumberTextInput = ({
         useNativeDriver: false,
       }).start();
     }
-    if (activated) { // call onDone when input is done
-      onDone();
-    }
   };
 
   return (
@@ -83,6 +80,7 @@ const PhoneNumberTextInput = ({
         style={styles.textStyle}
         onBlur={onBlur}
         onFocus={onFocus}
+        keyboardType="number-pad"
       />
     </Animated.View>
   );

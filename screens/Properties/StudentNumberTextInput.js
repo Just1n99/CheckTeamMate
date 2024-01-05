@@ -1,7 +1,6 @@
-import React, {useState, useRef} from 'react';
-import {Animated, Easing, TextInput, StyleSheet} from 'react-native';
-
-export let StudentNumTextInputActivated = false;
+//회원가입 화면 학번 입력창
+import React, { useState, useRef } from 'react';
+import { Animated, Easing, TextInput, StyleSheet } from 'react-native';
 
 const StudentNumberTextInput = ({
   label = '학번',
@@ -9,22 +8,22 @@ const StudentNumberTextInput = ({
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
-  onDone }) => {
-
+  onValidInput }) => {
+    
   const [studentNumber, setStudentNumber] = useState("");
-  const [activated, setActivated] = useState(false); // add this state
-
   const animatedValue = useRef(new Animated.Value(0));
 
   const handleInputChange = (text) => {
     setStudentNumber(text);
-    if (text.length == 0){
-      setActivated(false); // set activated to false when input is empty
-    } else{
-      setActivated(true); // set activated to true when input is not empty
+    if (text.length > 5) {    //valid input인지 판별
+      onValidInput(true);
+    } 
+    else {
+      onValidInput(false);
     }
   };
 
+  //입력창 애니메이션 효과
   const returnAnimatedTitleStyles = {
     transform: [
       {
@@ -53,6 +52,7 @@ const StudentNumberTextInput = ({
     }),
     borderBottomWidth: 1.5,
   }
+
   const onFocus = () => {
     Animated.timing(animatedValue?.current, {
       toValue: 1,
@@ -71,9 +71,6 @@ const StudentNumberTextInput = ({
         useNativeDriver: false,
       }).start();
     }
-    if (activated) { // call onDone when input is done
-      onDone();
-    }
   };
 
   return (
@@ -85,6 +82,7 @@ const StudentNumberTextInput = ({
         style={styles.textStyle}
         onBlur={onBlur}
         onFocus={onFocus}
+        keyboardType="number-pad"
       />
     </Animated.View>
   );

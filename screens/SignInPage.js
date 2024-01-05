@@ -1,51 +1,62 @@
+//회원가입 화면
 import React, {useState} from 'react';
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView} from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import UniversityTextInput from "./Properties/UniversityTextInput";
 import StudentNumberTextInput from "./Properties/StudentNumberTextInput";
 import PhoneNumberTextInput from "./Properties/PhoneNumberTextInput";
 
-const WINDOW_WIDHT = Dimensions.get("window").width;
-const WINDOW_HEIGHT = Dimensions.get("window").height;
+//const WINDOW_WIDHT = Dimensions.get("window").width;
+//const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 export default function SignInPage() {
   const navigation = useNavigation()
 
-  const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [signInBtnColor, setSignInBtnColor] = useState("#D9D9D9");
+  const [signInBtnColor, setSignInBtnColor] = useState("#D9D9D9");    //가입하기 버튼 색상 (초기값: 회색)
 
-  const [universityDone, setUniversityDone] = useState(false);
-  const [studentNumberDone, setStudentNumberDone] = useState(false);
-  const [phoneNumberDone, setPhoneNumberDone] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);     //가입하기 버튼 비활성화/활성화 (초기값: 비활성화)
 
-  const handleUniversityDone = () => {
-    setUniversityDone(true);
-    if (studentNumberDone && phoneNumberDone) {
-      setButtonDisabled(false)
+  const [universityValid, setUniversityValid] = useState(false);    //학교 이름 입력값이 valid한지 판별
+  const [studentNumberValid, setStudentNumberValid] = useState(false);    //학번 판별
+  const [phoneNumberValid, setPhoneNumberValid] = useState(false);      //전화번호 판별
+
+  const handleSignInBtnColor = () => {      //입력값이 모두 valid할 경우 버튼 활성화, 색상 변경
+    if ((universityValid && studentNumberValid && phoneNumberValid)){
       setSignInBtnColor("#050026");
     }
+    else{
+      setSignInBtnColor("#D9D9D9");
+    }
+  }
+  //입력값 (대학이름, 학번, 전화번호)이 valid input인지 판별
+  const handleUniversityValid = (valid) => {
+    setUniversityValid(valid);
+    if(!(valid && studentNumberValid && phoneNumberValid)){
+      setButtonDisabled(false);
+    }
+    handleSignInBtnColor();
   };
 
-  const handleStudentNumberDone = () => {
-    setStudentNumberDone(true);
-    if (universityDone && phoneNumberDone) {
+  const handleStudentNumberValid = (valid) => {
+    setStudentNumberValid(valid);
+    if(!(valid && universityValid && phoneNumberValid)){
       setButtonDisabled(false);
-      setSignInBtnColor("#050026");
     }
+    handleSignInBtnColor();
   };
 
-  const handlePhoneNumberDone = () => {
-    setPhoneNumberDone(true);
-    if (universityDone && studentNumberDone) {
+  const handlePhoneNumberValid = (valid) => {
+    setPhoneNumberValid(valid);
+    if(!(valid && universityValid && studentNumberValid)){
       setButtonDisabled(false);
-      setSignInBtnColor("#050026");
     }
+    handleSignInBtnColor();
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior='padding' style={styles.container}>
       <StatusBar style={"dark"}></StatusBar>
       <View style={styles.backBtn}>
         <TouchableOpacity onPress={() => navigation.navigate("InitialPage")}>
@@ -56,9 +67,9 @@ export default function SignInPage() {
         <Image style={styles.logoImage} source={require("./logo.png")}></Image>
       </View>
       <View style={styles.inputContainer}>
-        <UniversityTextInput onDone={handleUniversityDone} />
-        <StudentNumberTextInput onDone = {handleStudentNumberDone}/>
-        <PhoneNumberTextInput onDone={handlePhoneNumberDone} />
+        <UniversityTextInput onValidInput={handleUniversityValid} />
+        <StudentNumberTextInput onValidInput={handleStudentNumberValid} />
+        <PhoneNumberTextInput onValidInput={handlePhoneNumberValid} />
       </View>
       <View style={styles.BtnContainter}>
         <TouchableOpacity disabled={buttonDisabled}>
@@ -67,7 +78,7 @@ export default function SignInPage() {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
