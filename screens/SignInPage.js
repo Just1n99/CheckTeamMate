@@ -1,8 +1,8 @@
 //회원가입 화면
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import UniversityTextInput from "./Properties/UniversityTextInput";
 import StudentNumberTextInput from "./Properties/StudentNumberTextInput";
@@ -23,17 +23,17 @@ export default function SignInPage() {
   const [phoneNumberValid, setPhoneNumberValid] = useState(false);      //전화번호 판별
 
   const handleSignInBtnColor = () => {      //입력값이 모두 valid할 경우 버튼 활성화, 색상 변경
-    if ((universityValid && studentNumberValid && phoneNumberValid)){
+    if ((universityValid && studentNumberValid && phoneNumberValid)) {
       setSignInBtnColor("#050026");
     }
-    else{
+    else {
       setSignInBtnColor("#D9D9D9");
     }
   }
   //입력값 (대학이름, 학번, 전화번호)이 valid input인지 판별
   const handleUniversityValid = (valid) => {
     setUniversityValid(valid);
-    if(!(valid && studentNumberValid && phoneNumberValid)){
+    if (!(valid && studentNumberValid && phoneNumberValid)) {
       setButtonDisabled(false);
     }
     handleSignInBtnColor();
@@ -41,7 +41,7 @@ export default function SignInPage() {
 
   const handleStudentNumberValid = (valid) => {
     setStudentNumberValid(valid);
-    if(!(valid && universityValid && phoneNumberValid)){
+    if (!(valid && universityValid && phoneNumberValid)) {
       setButtonDisabled(false);
     }
     handleSignInBtnColor();
@@ -49,36 +49,38 @@ export default function SignInPage() {
 
   const handlePhoneNumberValid = (valid) => {
     setPhoneNumberValid(valid);
-    if(!(valid && universityValid && studentNumberValid)){
+    if (!(valid && universityValid && studentNumberValid)) {
       setButtonDisabled(false);
     }
     handleSignInBtnColor();
   };
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={styles.container}>
-      <StatusBar style={"dark"}></StatusBar>
-      <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate("InitialPage")}>
-          <AntDesign name="left" size={30} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.logoContainter}>
-        <Image style={styles.logoImage} source={require("./logo.png")}></Image>
-      </View>
-      <View style={styles.inputContainer}>
-        <UniversityTextInput onValidInput={handleUniversityValid} />
-        <StudentNumberTextInput onValidInput={handleStudentNumberValid} />
-        <PhoneNumberTextInput onValidInput={handlePhoneNumberValid} />
-      </View>
-      <View style={styles.BtnContainter}>
-        <TouchableOpacity disabled={buttonDisabled}>
-          <View style={{...styles.logInBtn, backgroundColor: signInBtnColor}}>
-            <Text style={styles.logInText}>가입하기</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView behavior='padding' style={styles.container}>
+        <StatusBar style={"dark"}></StatusBar>
+        <View style={styles.backBtn}>
+          <TouchableOpacity onPress={() => navigation.navigate("InitialPage")}>
+            <AntDesign name="left" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.logoContainter}>
+          <Image style={styles.logoImage} source={require("./logo.png")}></Image>
+        </View>
+        <View style={styles.inputContainer}>
+          <UniversityTextInput onValidInput={handleUniversityValid} />
+          <StudentNumberTextInput onValidInput={handleStudentNumberValid} />
+          <PhoneNumberTextInput onValidInput={handlePhoneNumberValid} />
+        </View>
+        <View style={styles.BtnContainter}>
+          <TouchableOpacity disabled={buttonDisabled}>
+            <View style={{ ...styles.logInBtn, backgroundColor: signInBtnColor }}>
+              <Text style={styles.logInText}>가입하기</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -119,7 +121,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   inputContainer: {
-    flex:2.5,
+    flex: 2.5,
     justifyContent: "flex-start",
   },
   universityInput: {
