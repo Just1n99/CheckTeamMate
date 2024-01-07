@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "CheckTeamMate",
-    "slug": "CheckTeamMate",
+    "name": "CheckTeamMate_SignUp",
+    "slug": "CheckTeamMate_SignUp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cra.CheckTeamMate"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.cra.CheckTeamMate"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b6273821-a2ad-479f-acc5-fbd66abde8d0"
+      }
+    },
+    "scheme": "CheckTeamMate_SignUp"
   }
 }

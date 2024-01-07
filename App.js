@@ -1,102 +1,68 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions} from "react-native";
-import React, { Component } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import MainScreen from './screens/Main';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import InitialPage from './screens/InitialPage';
-import SignInPage from './screens/SignInPage';
-import AddScreen from './screens/main/Add'
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from 'expo-web-browser';
+import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential } from 'firebase/auth';
+import { auth } from './firebaseConfig';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as React from 'react';
+import Navigation from './Navigation';
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import {initializeAuth, onAuthStateChanged, getReactNativePersistence} from 'firebase/auth'
-import {getFirestore} from 'firebase/firestore'
-import {getStorage} from 'firebase/storage'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+WebBrowser.maybeCompleteAuthSession();
 
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit'
-import { user } from './redux/reducers/user';
-const store = configureStore( {
-  reducer: {
-    userState: user,
-  }
-});
+export default function App() {
+  const [userInfo, setUserInfo] = React.useState();
+  const [loading, setLoad] = React.useState(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: "585968325577-g4f1p2528ek1ogvc1nagde5ejsvthd9n.apps.googleusercontent.com",
+    androidClientId: "585968325577-p5a1gs2a6vsi0fp6h9dim8lpk4m2jlp8.apps.googleusercontent.com",
+  })
+  // const checkLocalUser = async () => {
+  //   try {
+  //     setLoad(true);
+  //     const userJSON = await AsyncStorage.getItem("@user");
+  //     const userData = userJSON ? JSON.parse(userJSON) : null;
+  //     console.log("local storage: ", userData);
+  //     setUserInfo(userData);
+  //   } catch(e) {
+  //     alert.apply(e.message);
+  //   } finally {
+  //     setLoad(false);
+  //   }
+  // }
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBdd7tif_T8NBTp35w0EqGIfNhcswnuXc4",
-  authDomain: "checkteammate-auth.firebaseapp.com",
-  projectId: "checkteammate-auth",
-  storageBucket: "checkteammate-auth.appspot.com",
-  messagingSenderId: "585968325577",
-  appId: "1:585968325577:web:947b381805205dbe7e8e18",
-  measurementId: "G-K3EB4KJD8P"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
-});
-const firestore = getFirestore(app);
-const storage = getStorage(app);
-
-const Stack = createStackNavigator();
-
-export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
+  React.useEffect(() => {
+    if(response?.type == "success") {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential);
     }
-  }
-  componentDidMount() {
-    onAuthStateChanged(auth, (user) => {
-      if(!user) {
-        this.setState({
-          loggedIn: false,
-          loaded: true,
-        })
+  }, [response])
+
+  React.useEffect(() => {
+    //checkLocalUser();
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if(user) {
+        console.log(JSON.stringify(user, null, 2));
+        setUserInfo(user);
+        await AsyncStorage.setItem("@user", JSON.stringify(user)); // log in if logged in before
       } else {
-        this.setState({
-          loggedIn: true,
-          loaded: true,
-        })
+        console.log("User is not authenticated");
       }
     })
-  }
-  render() {
-    const { loggedIn, loaded } = this.state;
-    if(!loaded) {
-      return(
-        <View style= {{flex: 1, justifyContent: "center"}}>
-          <Text>Loading...</Text>
-        </View>
-      )
-    }
-    if(!loggedIn) {
-      return (
-          <NavigationContainer>
-          <Stack.Navigator initialRouteName="InitialPage">
-            <Stack.Screen 
-            name="InitialPage" component={InitialPage} options={{headerShown: false}} />
-            <Stack.Screen name="SignInPage" component={SignInPage} options={{headerShown: false}} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      );
-    }
-    return(
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="InitialPage">
-              <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
-              <Stack.Screen name="Add" component={AddScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
-    )
-  }
-}
 
-export default App
+    return () => unsub();
+  }, []);
+  
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+  
+  return userInfo ? <Navigation /> : <InitialPage promptAsync={promptAsync} />;
+}

@@ -1,28 +1,29 @@
-import React, {useState, useRef} from 'react';
-import {Animated, Easing, TextInput, StyleSheet} from 'react-native';
+//회원가입 화면 학교이름 입력창
+import React, { useState, useRef } from 'react';
+import { Animated, Easing, TextInput, StyleSheet } from 'react-native';
 
-const UniversityTextInput = ({ 
-  label = '학교 이름', 
-  titleActiveSize = 12, 
-  titleInActiveSize = 16, 
-  titleActiveColor = '#444444', 
-  titleInactiveColor = '#c2c2c2', 
-  onDone }) => {
-    
+const UniversityTextInput = ({
+  label = '학교 이름',
+  titleActiveSize = 12,
+  titleInActiveSize = 16,
+  titleActiveColor = '#444444',
+  titleInactiveColor = '#c2c2c2',
+  onValidInput }) => {
+
   const [university, setUniversity] = useState("");
-  const [activated, setActivated] = useState(false);
-
   const animatedValue = useRef(new Animated.Value(0));
 
   const handleInputChange = (text) => {
     setUniversity(text);
-    if (text.length == 0){
-      setActivated(false);
-    } else{
-      setActivated(true);
+    if (text.length > 0) { // valid input인지 판별
+      onValidInput(true);
+    }
+    else {
+      onValidInput(false);
     }
   };
 
+  //입력창 애니메이션 효과
   const returnAnimatedTitleStyles = {
     transform: [
       {
@@ -69,9 +70,6 @@ const UniversityTextInput = ({
         easing: Easing.bezier(0.4, 0.0, 0.2, 1),
         useNativeDriver: false,
       }).start();
-    }
-    if (activated) {
-      onDone(); // call onDone when input is done
     }
   };
 

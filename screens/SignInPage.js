@@ -1,110 +1,101 @@
-import React, {useState} from 'react';
+//회원가입 화면
+import React, { useState } from 'react';
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, TextInput, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Button, Alert } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import UniversityTextInput from "./Properties/UniversityTextInput";
 import StudentNumberTextInput from "./Properties/StudentNumberTextInput";
 import PhoneNumberTextInput from "./Properties/PhoneNumberTextInput";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import { signOut } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
-const WINDOW_WIDHT = Dimensions.get("window").width;
-const WINDOW_HEIGHT = Dimensions.get("window").height;
+//const WINDOW_WIDHT = Dimensions.get("window").width;
+//const WINDOW_HEIGHT = Dimensions.get("window").height;
 
-export default function SignInPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
-  const navigation = useNavigation()
+export default function SignInPage({ navigation }) {
+  // const navigation = useNavigation();
 
-  const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [signInBtnColor, setSignInBtnColor] = useState("#D9D9D9");
+  const [signInBtnColor, setSignInBtnColor] = useState("#D9D9D9");    //가입하기 버튼 색상 (초기값: 회색)
 
-  const [universityDone, setUniversityDone] = useState(false);
-  const [studentNumberDone, setStudentNumberDone] = useState(false);
-  const [phoneNumberDone, setPhoneNumberDone] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);     //가입하기 버튼 비활성화/활성화 (초기값: 비활성화)
 
-  const handleUniversityDone = () => {
-    setUniversityDone(true);
-    if (studentNumberDone && phoneNumberDone) {
-      setButtonDisabled(false)
+  const [universityValid, setUniversityValid] = useState(false);    //학교 이름 입력값이 valid한지 판별
+  const [studentNumberValid, setStudentNumberValid] = useState(false);    //학번 판별
+  const [phoneNumberValid, setPhoneNumberValid] = useState(false);      //전화번호 판별
+
+  const handleSignInBtnColor = () => {      //입력값이 모두 valid할 경우 버튼 활성화, 색상 변경
+    if ((universityValid && studentNumberValid && phoneNumberValid)) {
       setSignInBtnColor("#050026");
     }
-  };
-
-  const handleStudentNumberDone = () => {
-    setStudentNumberDone(true);
-    if (universityDone && phoneNumberDone) {
+    else {
+      setSignInBtnColor("#D9D9D9");
+    }
+  }
+  //입력값 (대학이름, 학번, 전화번호)이 valid input인지 판별
+  const handleUniversityValid = (valid) => {
+    setUniversityValid(valid);
+    if (!(valid && studentNumberValid && phoneNumberValid)) {
       setButtonDisabled(false);
-      setSignInBtnColor("#050026");
     }
+    handleSignInBtnColor();
   };
 
-  const handlePhoneNumberDone = () => {
-    setPhoneNumberDone(true);
-    if (universityDone && studentNumberDone) {
+  const handleStudentNumberValid = (valid) => {
+    setStudentNumberValid(valid);
+    if (!(valid && universityValid && phoneNumberValid)) {
       setButtonDisabled(false);
-      setSignInBtnColor("#050026");
     }
+    handleSignInBtnColor();
   };
 
-  const onSignUp = async () => {
-    const auth = getAuth();
-    const firestore = getFirestore();
+  const handlePhoneNumberValid = (valid) => {
+    setPhoneNumberValid(valid);
+    if (!(valid && universityValid && studentNumberValid)) {
+      setButtonDisabled(false);
+    }
+    handleSignInBtnColor();
+  };
 
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((result) => {
-      const user = auth.currentUser;
-      const usersCollection = collection(firestore, 'users');
-      const userDoc = doc(usersCollection, user.uid); 
-      setDoc(userDoc, {
-        email
-      })
-      console.log(result)
+  const logOut = () => {
+    signOut(auth).then(response => {
+      Alert.alert("You have signed out");
+      navigation.navigate('InitialPage');
     })
-    .catch((error) => {
-        Alert.alert("Sign Up Error", "Email already in use");
-    })
-};
+    .catch(error => {
+      Alert.alert("You have failed to sign out");
+    });
+  };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style={"dark"}></StatusBar>
-      <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate("InitialPage")}>
-          <AntDesign name="left" size={30} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.logoContainter}>
-        <Image style={styles.logoImage} source={require("./logo.png")}></Image>
-      </View>
-      <View style={styles.inputContainer}>
-        <UniversityTextInput onDone={handleUniversityDone} />
-        <StudentNumberTextInput onDone = {handleStudentNumberDone}/>
-        <PhoneNumberTextInput onDone={handlePhoneNumberDone} />
-      </View>
-      <View>
-      <TextInput 
-            autoCapitalize="none"
-            placeholder="email"
-            onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput 
-            autoCapitalize="none"
-            placeholder="password"
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-            />
-      </View>
-      <View style={styles.BtnContainter}>
-        <TouchableOpacity disabled={buttonDisabled}>
-          <View style={{...styles.logInBtn, backgroundColor: signInBtnColor}}>
-            <Text style={styles.logInText} onPress={onSignUp}>가입하기</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView behavior='padding' style={styles.container}>
+        <StatusBar style={"dark"}></StatusBar>
+        <View style={styles.backBtn}>
+          <TouchableOpacity onPress={() => navigation.navigate("InitialPage")}>
+            <AntDesign name="left" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.logoContainter}>
+          <Image style={styles.logoImage} source={require("./logo.png")}></Image>
+        </View>
+        <View style={styles.inputContainer}>
+          <UniversityTextInput onValidInput={handleUniversityValid} />
+          <StudentNumberTextInput onValidInput={handleStudentNumberValid} />
+          <PhoneNumberTextInput onValidInput={handlePhoneNumberValid} />
+        </View>
+        <View style={styles.BtnContainter}>
+          <TouchableOpacity disabled={buttonDisabled}>
+            <View style={{ ...styles.logInBtn, backgroundColor: signInBtnColor }}>
+              <Text style={styles.logInText}>가입하기</Text>
+            </View>
+          </TouchableOpacity>
+          <View>
+            <Button title="Sign Out" onPress={logOut} />
+        </View>
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -145,7 +136,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   inputContainer: {
-    flex:2.5,
+    flex: 2.5,
     justifyContent: "flex-start",
   },
   universityInput: {
