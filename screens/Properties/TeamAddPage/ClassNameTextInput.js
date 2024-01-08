@@ -1,25 +1,27 @@
-//회원가입 화면 학교이름 입력창
+//수업등록 수업이름 입력창
 import React, { useState, useRef } from 'react';
-import { Animated, Easing, TextInput, StyleSheet } from 'react-native';
+import { Animated, Easing, TextInput, StyleSheet, Image, View, Text} from 'react-native';
 
-const UniversityTextInput = ({
-  label = '학교 이름',
+const ClassNameTextInput = ({
+  label ='수업 이름',
   titleActiveSize = 12,
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
   onValidInput }) => {
-
-  const [university, setUniversity] = useState("");
+  const [className, setClassName] = useState("");
   const animatedValue = useRef(new Animated.Value(0));
 
+  const [visible, setVisible] = useState(true);
+
   const handleInputChange = (text) => {
-    setUniversity(text);
-    if (text.length > 0) { // valid input인지 판별
-      onValidInput(true);
-    }
+    setClassName(text);
+    if (text.length > 0) {    // valid input인지 판별
+      onValidInput(true);       //valid할 경우 true 전달
+      setVisible(false)
+    } 
     else {
-      onValidInput(false);
+      onValidInput(false);    //아닐 경우 false 전달
     }
   };
 
@@ -60,10 +62,11 @@ const UniversityTextInput = ({
       easing: Easing.bezier(0.4, 0.0, 0.2, 1),
       useNativeDriver: false,
     }).start();
+    setVisible(false)
   };
 
   const onBlur = () => {
-    if (!university) {
+    if (!className) {
       Animated.timing(animatedValue?.current, {
         toValue: 0,
         duration: 500,
@@ -71,14 +74,20 @@ const UniversityTextInput = ({
         useNativeDriver: false,
       }).start();
     }
+    if(className == 0){
+      setVisible(true)
+    }
   };
 
   return (
     <Animated.View style={[styles.subContainer, viewStyles]}>
-      <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
+      <View style={styles.inputStyle}>
+        {visible && <Image style={styles.astarisk} source={require("/Users/dowon/Documents/CheckTeamMate2/screens/Images/RedAstarisk.png")}></Image>}
+        <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
+      </View>
       <TextInput
         onChangeText={handleInputChange}
-        value={university}
+        value={className}
         style={styles.textStyle}
         onBlur={onBlur}
         onFocus={onFocus}
@@ -95,6 +104,17 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 18,
   },
+  labelAsterisk: {
+    color: 'red',
+  },
+  astarisk: {
+    width: 7,
+    height: 7,
+  },
+  inputStyle: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
 });
 
-export default UniversityTextInput;
+export default ClassNameTextInput;

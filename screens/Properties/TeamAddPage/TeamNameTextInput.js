@@ -1,25 +1,28 @@
-//회원가입 화면 학번 입력창
+//수업등록 팀 이름 입력창
 import React, { useState, useRef } from 'react';
-import { Animated, Easing, TextInput, StyleSheet } from 'react-native';
+import { Animated, Easing, TextInput, StyleSheet, View, Image} from 'react-native';
 
-const StudentNumberTextInput = ({
-  label = '학번',
+const TeamNameTextInput = ({
+  label = '팀 이름',
   titleActiveSize = 12,
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
   onValidInput }) => {
-    
-  const [studentNumber, setStudentNumber] = useState("");
+
+  const [teamName, setTeamName] = useState("");
   const animatedValue = useRef(new Animated.Value(0));
 
+  const [visible, setVisible] = useState(true);
+
   const handleInputChange = (text) => {
-    setStudentNumber(text);
-    if (text.length > 5) {    //valid input인지 판별
-      onValidInput(true);
+    setTeamName(text);
+    if (text.length > 0) {    // valid input인지 판별
+      onValidInput(true);       //valid할 경우 true 전달
+      setVisible(false)
     } 
     else {
-      onValidInput(false);
+      onValidInput(false);    //아닐 경우 false 전달
     }
   };
 
@@ -60,10 +63,11 @@ const StudentNumberTextInput = ({
       easing: Easing.bezier(0.4, 0.0, 0.2, 1),
       useNativeDriver: false,
     }).start();
+    setVisible(false)
   };
 
   const onBlur = () => {
-    if (!studentNumber) {
+    if (!teamName) {
       Animated.timing(animatedValue?.current, {
         toValue: 0,
         duration: 500,
@@ -71,18 +75,23 @@ const StudentNumberTextInput = ({
         useNativeDriver: false,
       }).start();
     }
+    if(teamName == 0){
+      setVisible(true)
+    }
   };
 
   return (
     <Animated.View style={[styles.subContainer, viewStyles]}>
-      <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
+      <View style={styles.inputStyle}>
+        {visible && <Image style={styles.astarisk} source={require("/Users/dowon/Documents/CheckTeamMate2/screens/Images/RedAstarisk.png")}></Image>}
+        <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
+      </View>
       <TextInput
         onChangeText={handleInputChange}
-        value={studentNumber}
+        value={teamName}
         style={styles.textStyle}
         onBlur={onBlur}
         onFocus={onFocus}
-        keyboardType="number-pad"
       />
     </Animated.View>
   );
@@ -96,6 +105,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 18,
   },
+  astarisk: {
+    width: 7,
+    height: 7,
+  },
+  inputStyle: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
 });
 
-export default StudentNumberTextInput;
+export default TeamNameTextInput;

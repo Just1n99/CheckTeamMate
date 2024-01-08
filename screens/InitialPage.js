@@ -1,7 +1,7 @@
 //시작 화면
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions} from "react-native";
 
 
 //const WINDOW_WIDHT = Dimensions.get("window").width;      //반응형 디자인을 위해 스크린 사이즈를 구하였으나 사용할지는 의문.
@@ -13,10 +13,10 @@ export default function InitialPage() {
     <View style={styles.container}>
       <StatusBar style={"dark"}></StatusBar>
       <View style={styles.logoContainter}>
-        <Image style={styles.logoImage} source={require("./logo.png")}></Image>
+        <Image style={styles.logoImage} source={require("/Users/dowon/Documents/CheckTeamMate2/screens/Images/logo.png")}></Image>
       </View>
       <View style={styles.imgContainer}>
-        <Image style={styles.logInImage} source={require("./LoginImages.gif")}></Image>
+        <Image style={styles.logInImage} source={require("/Users/dowon/Documents/CheckTeamMate2/screens/Images/LoginImages.gif")}></Image>
         <Text style={styles.description}>무임승차를 방지하기 위한 최적의 방법</Text>
       </View>
       <View style={styles.BtnContainter}>

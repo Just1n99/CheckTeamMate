@@ -1,20 +1,20 @@
-//회원가입 화면 전화번호 입력창
+//수업등록 장소 입력창
 import React, { useState, useRef } from 'react';
 import { Animated, Easing, TextInput, StyleSheet } from 'react-native';
 
-const PhoneNumberTextInput = ({
-  label = '전화번호',
+const LocationTextInput = ({
+  label = '장소',
   titleActiveSize = 12,
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
   onValidInput }) => {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [location, setLocation] = useState("");
   const animatedValue = useRef(new Animated.Value(0));
 
   const handleInputChange = (text) => {
-    setPhoneNumber(text);
-    if (text.length == 10) {    // valid input인지 판별
+    setLocation(text);
+    if (text.length > 0) {    // valid input인지 판별
       onValidInput(true);       //valid할 경우 true 전달
     } 
     else {
@@ -22,6 +22,7 @@ const PhoneNumberTextInput = ({
     }
   };
 
+  //입력창 애니메이션 효과
   const returnAnimatedTitleStyles = {
     transform: [
       {
@@ -61,7 +62,7 @@ const PhoneNumberTextInput = ({
   };
 
   const onBlur = () => {
-    if (!phoneNumber) {
+    if (!location) {
       Animated.timing(animatedValue?.current, {
         toValue: 0,
         duration: 500,
@@ -76,11 +77,10 @@ const PhoneNumberTextInput = ({
       <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
       <TextInput
         onChangeText={handleInputChange}
-        value={phoneNumber}
+        value={location}
         style={styles.textStyle}
         onBlur={onBlur}
         onFocus={onFocus}
-        keyboardType="number-pad"
       />
     </Animated.View>
   );
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PhoneNumberTextInput;
+export default LocationTextInput;
