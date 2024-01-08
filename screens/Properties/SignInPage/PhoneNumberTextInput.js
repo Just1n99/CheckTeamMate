@@ -8,6 +8,7 @@ const PhoneNumberTextInput = ({
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
+  onChangeText,
   onValidInput}) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const animatedValue = useRef(new Animated.Value(0));
@@ -20,6 +21,9 @@ const PhoneNumberTextInput = ({
     } 
     else {
       onValidInput(false);    //아닐 경우 false 전달
+    }
+    if (onChangeText) {
+      onChangeText(text); // Notify parent about text changes
     }
   };
 

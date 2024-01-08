@@ -2,14 +2,32 @@
 import React, { useState } from 'react';
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import UniversityTextInput from "./Properties/SignInPage/UniversityTextInput";
 import StudentNumberTextInput from "./Properties/SignInPage/StudentNumberTextInput";
 import PhoneNumberTextInput from "./Properties/SignInPage/PhoneNumberTextInput";
 import { useEffect } from 'react';
+import { firestore, FieldValue } from '../firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function SignInPage({ promptAsync, navigation }) {
+  const [addSchool, setSchool] = useState('');
+  const [addStudentID, setStudentID] = useState('');
+  const [addPhoneNum, setPhoneNum] = useState('');
+
+  const addField = () => {
+    setDoc(doc(firestore, "users", "userInfo"), {
+      //data to add to firestore
+      school: addSchool,
+      studentID: addStudentID,
+      phoneNum: addPhoneNum,
+    }).then(() => {
+      console.log("data submitted");
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
   useEffect(() => {
     // Ensure promptAsync is defined when the component mounts
@@ -50,11 +68,10 @@ export default function SignInPage({ promptAsync, navigation }) {
       setSignInBtnColor("#D9D9D9");
     }
   };
-
+  
   const handlePhoneNumberValid = (valid) => {
     setPhoneNumberValid(valid);
     if ((valid && universityValid && studentNumberValid)) {
-      //console.log("yeahh");
       setButtonDisabled(false);
       setSignInBtnColor("#050026");
     }
@@ -64,6 +81,13 @@ export default function SignInPage({ promptAsync, navigation }) {
     }
   };
 
+
+  const handleSignUp = async () => {
+    await promptAsync(); // Execute the promptAsync function
+    
+    // Now, addField function can be called after the promptAsync completes
+    addField();
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -78,12 +102,12 @@ export default function SignInPage({ promptAsync, navigation }) {
           <Image style={styles.logoImage} source={require("./Images/logo.png")}></Image>
         </View>
         <View style={styles.inputContainer}>
-          <UniversityTextInput onValidInput={handleUniversityValid} />
-          <StudentNumberTextInput onValidInput={handleStudentNumberValid} />
-          <PhoneNumberTextInput onValidInput={handlePhoneNumberValid} />
+          <UniversityTextInput onValidInput={handleUniversityValid} onChangeText={(school) => {setSchool(school)}} />
+          <StudentNumberTextInput onValidInput={handleStudentNumberValid} onChangeText={(studentID) => {setStudentID(studentID)}}/>
+          <PhoneNumberTextInput onValidInput={handlePhoneNumberValid} onChangeText={(phoneNum) => {setPhoneNum(phoneNum)}}/>
         </View>
         <View style={styles.BtnContainter}>
-          <TouchableOpacity disabled={buttonDisabled}  onPress={() => promptAsync()}>
+          <TouchableOpacity disabled={buttonDisabled}  onPress={handleSignUp}>
             <View style={{ ...styles.logInBtn, backgroundColor: signInBtnColor }}>
               <Text style={styles.logInText}>가입하기</Text>
             </View>

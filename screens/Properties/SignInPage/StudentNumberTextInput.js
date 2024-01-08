@@ -8,6 +8,7 @@ const StudentNumberTextInput = ({
   titleInActiveSize = 16,
   titleActiveColor = '#444444',
   titleInactiveColor = '#c2c2c2',
+  onChangeText,
   onValidInput }) => {
     
   const [studentNumber, setStudentNumber] = useState("");
@@ -21,6 +22,9 @@ const StudentNumberTextInput = ({
     } 
     else {
       onValidInput(false);
+    }
+    if (onChangeText) {
+      onChangeText(text); // Notify parent about text changes
     }
   };
 
