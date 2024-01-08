@@ -1,14 +1,23 @@
 //수업등록 수업이름 입력창
-import React, { useState, useRef } from 'react';
-import { Animated, Easing, TextInput, StyleSheet, Image, View, Text} from 'react-native';
+import React, { useState, useRef } from "react";
+import {
+  Animated,
+  Easing,
+  TextInput,
+  StyleSheet,
+  Image,
+  View,
+  Text,
+} from "react-native";
 
 const ClassNameTextInput = ({
-  label ='수업 이름',
+  label = "수업 이름",
   titleActiveSize = 12,
   titleInActiveSize = 16,
-  titleActiveColor = '#444444',
-  titleInactiveColor = '#c2c2c2',
-  onValidInput }) => {
+  titleActiveColor = "#444444",
+  titleInactiveColor = "#c2c2c2",
+  onValidInput,
+}) => {
   const [className, setClassName] = useState("");
   const animatedValue = useRef(new Animated.Value(0));
 
@@ -16,12 +25,12 @@ const ClassNameTextInput = ({
 
   const handleInputChange = (text) => {
     setClassName(text);
-    if (text.length > 0) {    // valid input인지 판별
-      onValidInput(true);       //valid할 경우 true 전달
-      setVisible(false)
-    } 
-    else {
-      onValidInput(false);    //아닐 경우 false 전달
+    if (text.length > 0) {
+      // valid input인지 판별
+      onValidInput(true); //valid할 경우 true 전달
+      setVisible(false);
+    } else {
+      onValidInput(false); //아닐 경우 false 전달
     }
   };
 
@@ -32,14 +41,14 @@ const ClassNameTextInput = ({
         translateY: animatedValue?.current?.interpolate({
           inputRange: [0, 1],
           outputRange: [22, -4],
-          extrapolate: 'clamp',
+          extrapolate: "clamp",
         }),
       },
     ],
     fontSize: animatedValue?.current?.interpolate({
       inputRange: [0, 1],
       outputRange: [titleInActiveSize, titleActiveSize],
-      extrapolate: 'clamp',
+      extrapolate: "clamp",
     }),
     color: animatedValue?.current?.interpolate({
       inputRange: [0, 1],
@@ -53,7 +62,7 @@ const ClassNameTextInput = ({
       outputRange: [titleInactiveColor, titleActiveColor],
     }),
     borderBottomWidth: 1.5,
-  }
+  };
 
   const onFocus = () => {
     Animated.timing(animatedValue?.current, {
@@ -62,7 +71,7 @@ const ClassNameTextInput = ({
       easing: Easing.bezier(0.4, 0.0, 0.2, 1),
       useNativeDriver: false,
     }).start();
-    setVisible(false)
+    setVisible(false);
   };
 
   const onBlur = () => {
@@ -74,16 +83,23 @@ const ClassNameTextInput = ({
         useNativeDriver: false,
       }).start();
     }
-    if(className == 0){
-      setVisible(true)
+    if (className == 0) {
+      setVisible(true);
     }
   };
 
   return (
     <Animated.View style={[styles.subContainer, viewStyles]}>
       <View style={styles.inputStyle}>
-        {visible && <Image style={styles.astarisk} source={require("/Users/dowon/Documents/CheckTeamMate2/screens/Images/RedAstarisk.png")}></Image>}
-        <Animated.Text style={[returnAnimatedTitleStyles]}>{label}</Animated.Text>
+        {visible && (
+          <Image
+            style={styles.astarisk}
+            source={require("../../Images/RedAstarisk.png")}
+          ></Image>
+        )}
+        <Animated.Text style={[returnAnimatedTitleStyles]}>
+          {label}
+        </Animated.Text>
       </View>
       <TextInput
         onChangeText={handleInputChange}
@@ -105,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   labelAsterisk: {
-    color: 'red',
+    color: "red",
   },
   astarisk: {
     width: 7,

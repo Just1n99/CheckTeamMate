@@ -1,18 +1,28 @@
 //수업 등록 화면
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
-import TeamNameTextInput from './Properties/TeamAddPage/TeamNameTextInput';
-import ClassNameTextInput from './Properties/TeamAddPage/ClassNameTextInput';
-import ClassNumberTextInput from './Properties/TeamAddPage/ClassNumberTextInput';
-import LocationTextInput from './Properties/TeamAddPage/LocationTextInput';
-import TimeTextInput from './Properties/TeamAddPage/TimeTextInput';
+import TeamNameTextInput from "./Properties/TeamAddPage/TeamNameTextInput";
+import ClassNameTextInput from "./Properties/TeamAddPage/ClassNameTextInput";
+import ClassNumberTextInput from "./Properties/TeamAddPage/ClassNumberTextInput";
+import LocationTextInput from "./Properties/TeamAddPage/LocationTextInput";
+import TimeTextInput from "./Properties/TeamAddPage/TimeTextInput";
 
 export default function ClassAddPage() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const [confirmBtnColor, setConfirmBtnColor] = useState("#D9D9D9");
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -28,80 +38,109 @@ export default function ClassAddPage() {
   //입력값 (팀이름, 수업이름, 분반, 장소, 시간)이 valid input인지 판별
   const handleTeamNameValid = (valid) => {
     setTeamNameValid(valid);
-    if ((valid && classNameValid && classNumberValid && locationValid && timeValid)) {
+    if (
+      valid &&
+      classNameValid &&
+      classNumberValid &&
+      locationValid &&
+      timeValid
+    ) {
       setButtonDisabled(false);
       setConfirmBtnColor("#050026");
     }
-    if (valid || classNameValid){
-      setVisible(false)
+    if (valid || classNameValid) {
+      setVisible(false);
     }
-    if (!(valid || classNameValid)){
-      setVisible(true)
-    }
-    else{
+    if (!(valid || classNameValid)) {
+      setVisible(true);
+    } else {
       setButtonDisabled(true);
       setConfirmBtnColor("#D9D9D9");
     }
   };
   const handleClassNameValid = (valid) => {
     setClassNameValid(valid);
-    if ((valid && teamNameValid && classNumberValid && locationValid && timeValid)) {
+    if (
+      valid &&
+      teamNameValid &&
+      classNumberValid &&
+      locationValid &&
+      timeValid
+    ) {
       setButtonDisabled(false);
       setConfirmBtnColor("#050026");
     }
-    if (valid || teamNameValid){
-      setVisible(false)
+    if (valid || teamNameValid) {
+      setVisible(false);
     }
-    if (!(valid || teamNameValid)){
-      setVisible(true)
-    }
-    else{
+    if (!(valid || teamNameValid)) {
+      setVisible(true);
+    } else {
       setButtonDisabled(true);
       setConfirmBtnColor("#D9D9D9");
     }
   };
   const handleClassNumberValid = (valid) => {
     setClassNumberValid(valid);
-    if ((valid && teamNameValid && classNameValid && locationValid && timeValid)) {
+    if (
+      valid &&
+      teamNameValid &&
+      classNameValid &&
+      locationValid &&
+      timeValid
+    ) {
       setButtonDisabled(false);
       setConfirmBtnColor("#050026");
-    }
-    else{
+    } else {
       setButtonDisabled(true);
       setConfirmBtnColor("#D9D9D9");
     }
   };
   const handleLocationValid = (valid) => {
     setLocationValid(valid);
-    if ((valid && teamNameValid && classNameValid && classNumberValid && timeValid)) {
+    if (
+      valid &&
+      teamNameValid &&
+      classNameValid &&
+      classNumberValid &&
+      timeValid
+    ) {
       setButtonDisabled(false);
       setConfirmBtnColor("#050026");
-    }
-    else{
+    } else {
       setButtonDisabled(true);
       setConfirmBtnColor("#D9D9D9");
     }
   };
   const handleTimeValid = (valid) => {
     setTimeValid(valid);
-    if ((valid && teamNameValid && classNameValid && classNumberValid && locationValid)) {
+    if (
+      valid &&
+      teamNameValid &&
+      classNameValid &&
+      classNumberValid &&
+      locationValid
+    ) {
       setButtonDisabled(false);
       setConfirmBtnColor("#050026");
-    }
-    else{
+    } else {
       setButtonDisabled(true);
       setConfirmBtnColor("#D9D9D9");
     }
   };
   const onPress = () => console.log("hi");
-  
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View behavior='padding' style={styles.container}>
+      <View behavior="padding" style={styles.container}>
         <StatusBar style={"dark"}></StatusBar>
         <View style={styles.headerContainer}>
           <View style={styles.backBtn}>
-            <TouchableOpacity onPress={() => { navigation.navigate("TeamScreen") }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("TeamScreen");
+              }}
+            >
               <AntDesign name="left" size={30} color="black" />
             </TouchableOpacity>
           </View>
@@ -110,7 +149,9 @@ export default function ClassAddPage() {
           </View>
           <View style={styles.confirmBtn}>
             <TouchableOpacity disabled={buttonDisabled}>
-              <Text style={{...styles.headerText, color:confirmBtnColor}}>확인</Text>
+              <Text style={{ ...styles.headerText, color: confirmBtnColor }}>
+                확인
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -121,12 +162,19 @@ export default function ClassAddPage() {
             </View>
             <View style={styles.circleContainer}>
               <View style={styles.circle}></View>
-              <Image style={styles.triangle} source={require("/Users/dowon/Documents/CheckTeamMate2/screens/Images/ColorSelectionTriangleBtn.png")}></Image>
+              <Image
+                style={styles.triangle}
+                source={require("./Images/ColorSelectionTriangleBtn.png")}
+              ></Image>
             </View>
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.descriptionContainter}>
-          {visible && <Text style={styles.description}>팀 이름 혹은 수업 이름을 반드시 입력해주세요!</Text>}
+          {visible && (
+            <Text style={styles.description}>
+              팀 이름 혹은 수업 이름을 반드시 입력해주세요!
+            </Text>
+          )}
         </View>
         <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -166,24 +214,24 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     marginLeft: "3%",
-    marginRight: "5%"
+    marginRight: "5%",
   },
   circleContainer: {
     flex: 1,
     //backgroundColor: "red",
     alignItems: "center",
     justifyContent: "flex-end",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   colorTextContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
-    marginLeft: "3%"
+    marginLeft: "3%",
   },
   colorText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   headerContainer: {
     marginTop: "5%",
@@ -202,7 +250,7 @@ const styles = StyleSheet.create({
   headerTitleContainer: {
     flex: 1,
     alignItems: "center",
-    marginLeft: "3%"
+    marginLeft: "3%",
   },
   confirmBtn: {
     flex: 1,
@@ -213,7 +261,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 19,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   inputContainer: {
     flex: 0.6,
