@@ -9,6 +9,8 @@ import { auth } from './firebaseConfig';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as React from 'react';
 import Navigation from './Navigation';
+import SignInPage from './screens/SignInPage';
+import TeamScreen from './screens/TeamScreen';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -50,6 +52,7 @@ export default function App() {
         await AsyncStorage.setItem("@user", JSON.stringify(user)); // log in if logged in before
       } else {
         console.log("User is not authenticated");
+        setUserInfo(user);
       }
     })
 
@@ -64,5 +67,5 @@ export default function App() {
     );
   }
   
-  return userInfo ? <Navigation /> : <InitialPage promptAsync={promptAsync} />;
+  return userInfo ? <TeamScreen /> : <Navigation promptAsync={promptAsync} />;
 }

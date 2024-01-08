@@ -1,20 +1,21 @@
 //시작 화면
+import { useNavigation } from "@react-navigation/core";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, KeyboardAvoidingView} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions} from "react-native";
 
 
 //const WINDOW_WIDHT = Dimensions.get("window").width;      //반응형 디자인을 위해 스크린 사이즈를 구하였으나 사용할지는 의문.
 //const WINDOW_HEIGHT = Dimensions.get("window").height;
 
-export default function InitialPage({ promptAsync }) {
+export default function InitialPage({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style={"dark"}></StatusBar>
       <View style={styles.logoContainter}>
-        <Image style={styles.logoImage} source={require("./logo.png")}></Image>
+        <Image style={styles.logoImage} source={require("./Images/logo.png")}></Image>
       </View>
       <View style={styles.imgContainer}>
-        <Image style={styles.logInImage} source={require("./loginImages.gif")}></Image>
+        <Image style={styles.logInImage} source={require("./Images/LoginImages.gif")}></Image>
         <Text style={styles.description}>무임승차를 방지하기 위한 최적의 방법</Text>
       </View>
       <View style={styles.BtnContainter}>
@@ -23,7 +24,7 @@ export default function InitialPage({ promptAsync }) {
             <Text style={styles.logInText}>로그인</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => promptAsync()}>  
+        <TouchableOpacity onPress={() => navigation.navigate("SignInPage")}>  
           <View style={styles.signInBtn}>
             <Text style={styles.signInText}>가입하기</Text>
           </View>
