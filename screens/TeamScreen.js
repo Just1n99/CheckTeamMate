@@ -18,16 +18,6 @@ export default function TeamScreen({ navigation }) {
         }
     };
 
-    const logOut = async () => {
-        await signOut(auth).then(response => {
-          Alert.alert("You have signed out");
-          navigation.navigate('InitialPage');
-        })
-        .catch(error => {
-          Alert.alert("You have failed to sign out");
-        });
-      };
-
     return (
         <View style={styles.container}>
             <StatusBar style={"dark"}></StatusBar>
@@ -60,10 +50,33 @@ export default function TeamScreen({ navigation }) {
                         </TouchableWithoutFeedback>
                     </Modal>
                 </TouchableOpacity>
-                <View>
-            <Button title="Sign Out" onPress={logOut} />
-             </View>
             </View>
+            <View>
+            <Button
+  title="Sign Out"
+  onPress={() => {
+    // code to show message to confirm user sign out
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            // Call the sign-out function here
+            signOut(auth);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }}
+/>
+             </View>
             <View style={styles.classContainer}>
             </View>
         </View >

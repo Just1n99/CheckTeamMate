@@ -18,6 +18,7 @@ const Navigation = ({ promptAsync }) => {
         <Stack.Screen name="SignInPage">
           {(props) => <SignInPage {...props} promptAsync={promptAsync} />}
         </Stack.Screen>
+        <Stack.Screen name="TeamScreen" component={TeamScreen} ></Stack.Screen>
         <Stack.Screen name="ClassAddPage" component={ClassAddPage} ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

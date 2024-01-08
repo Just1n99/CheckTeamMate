@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, Image } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import InitialPage from './screens/InitialPage';
 import * as Google from "expo-auth-session/providers/google";
@@ -17,23 +17,25 @@ WebBrowser.maybeCompleteAuthSession();
 export default function App() {
   const [userInfo, setUserInfo] = React.useState();
   const [loading, setLoad] = React.useState(false);
+  // Client ID to connect to firebase
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: "585968325577-g4f1p2528ek1ogvc1nagde5ejsvthd9n.apps.googleusercontent.com",
     androidClientId: "585968325577-p5a1gs2a6vsi0fp6h9dim8lpk4m2jlp8.apps.googleusercontent.com",
   })
-  // const checkLocalUser = async () => {
-  //   try {
-  //     setLoad(true);
-  //     const userJSON = await AsyncStorage.getItem("@user");
-  //     const userData = userJSON ? JSON.parse(userJSON) : null;
-  //     console.log("local storage: ", userData);
-  //     setUserInfo(userData);
-  //   } catch(e) {
-  //     alert.apply(e.message);
-  //   } finally {
-  //     setLoad(false);
-  //   }
-  // }
+  // code to remember user if previously logged in before exiting app
+  const checkLocalUser = async () => {
+    try {
+      setLoad(true);
+      const userJSON = await AsyncStorage.getItem("@user");
+      const userData = userJSON ? JSON.parse(userJSON) : null;
+      console.log("local storage: ", userData);
+      setUserInfo(userData);
+    } catch(e) {
+      alert.apply(e.message);
+    } finally {
+      setLoad(false);
+    }
+  }
 
   React.useEffect(() => {
     if(response?.type == "success") {
@@ -44,7 +46,7 @@ export default function App() {
   }, [response])
 
   React.useEffect(() => {
-    //checkLocalUser();
+    checkLocalUser();
     const unsub = onAuthStateChanged(auth, async (user) => {
       if(user) {
         console.log(JSON.stringify(user, null, 2));
@@ -61,11 +63,20 @@ export default function App() {
   
   if (loading) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator size={"large"} />
+      <View style={styles.imgContainer}>
+        <Image style={styles.logInImage} source={require("./screens/loading.gif")}></Image>
       </View>
     );
   }
   
   return userInfo ? <TeamScreen /> : <Navigation promptAsync={promptAsync} />;
 }
+
+const styles = StyleSheet.create({
+  imgContainer: {
+    flex: 2,
+    //backgroundColor: "gray",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
