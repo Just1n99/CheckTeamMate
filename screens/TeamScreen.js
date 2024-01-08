@@ -6,6 +6,7 @@ import {
   Text,
   View,
   Image,
+  ScrollView,
   TouchableOpacity,
   Modal,
   TouchableWithoutFeedback,
@@ -27,55 +28,55 @@ export default function TeamScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style={"dark"}></StatusBar>
-      <View style={styles.addBtnContainter}>
-        <TouchableOpacity style={styles.addBtnContainter} onPress={handlePress}>
-          <Image
-            style={styles.addBtn}
-            source={require("./Images/ClassAddBtn.png")}
-          ></Image>
-          <Modal
-            style={styles.modalView}
-            animationType="fade"
-            transparent={true}
-            visible={showModal}
-          >
-            <TouchableWithoutFeedback onPress={handlePress}>
-              <View style={styles.modalView}>
-                <View style={styles.addBtnContainter}>
-                  <TouchableOpacity
-                    style={styles.addBtnContainter}
-                    onPress={handlePress}
-                  >
-                    <Image
-                      style={styles.addBtn}
-                      source={require("./Images/CloseClassAddBtn.png")}
-                    ></Image>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.TwoBtnContainer} onPress={handlePress}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("ClassAddPage"), setShowModal(false);
-                    }}
-                  >
-                    <View style={styles.AddClassBtn}>
-                      <Text>수업 등록</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <View style={styles.JoinClassBtn}>
-                      <Text>팀 참여하기</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View flex={1}></View>
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.classContainer}></View>
+      <ScrollView>
+        <View style={styles.house}>
+          <Image source={require("./Images/물리사랑해.png")}></Image>
+          <Text style={styles.title}>물리 사랑해</Text>
+          <Text style={styles.class}>1분반</Text>
+          <Text style={styles.classroom}>강의실: NTH 319</Text>
+          <Text style={styles.contents}>수업시간: 화, 금 10:00 ~ 11:15</Text>
+        </View>
+
+        <View style={styles.house}>
+          <Image source={require("./Images/물리사랑해.png")}></Image>
+          <Text style={styles.title}>물리 사랑해</Text>
+          <Text style={styles.class}>1분반</Text>
+          <Text style={styles.classroom}>강의실: NTH 319</Text>
+          <Text style={styles.contents}>수업시간: 화, 금 10:00 ~ 11:15</Text>
+        </View>
+
+        <View style={styles.house}>
+          <Image source={require("./Images/물리사랑해.png")}></Image>
+          <Text style={styles.title}>물리 사랑해</Text>
+          <Text style={styles.class}>1분반</Text>
+          <Text style={styles.classroom}>강의실: NTH 319</Text>
+          <Text style={styles.contents}>수업시간: 화, 금 10:00 ~ 11:15</Text>
+        </View>
+
+        <View style={styles.house}>
+          <Image source={require("./Images/물리사랑해.png")}></Image>
+          <Text style={styles.title}>물리 사랑해</Text>
+          <Text style={styles.class}>1분반</Text>
+          <Text style={styles.classroom}>강의실: NTH 319</Text>
+          <Text style={styles.contents}>수업시간: 화, 금 10:00 ~ 11:15</Text>
+        </View>
+
+        <View style={styles.house}>
+          <Image source={require("./Images/물리사랑해.png")}></Image>
+          <Text style={styles.title}>물리 사랑해</Text>
+          <Text style={styles.class}>1분반</Text>
+          <Text style={styles.classroom}>강의실: NTH 319</Text>
+          <Text style={styles.contents}>수업시간: 화, 금 10:00 ~ 11:15</Text>
+        </View>
+
+        <View style={styles.house}>
+          <Image source={require("./Images/물리사랑해.png")}></Image>
+          <Text style={styles.title}>물리 사랑해</Text>
+          <Text style={styles.class}>1분반</Text>
+          <Text style={styles.classroom}>강의실: NTH 319</Text>
+          <Text style={styles.contents}>수업시간: 화, 금 10:00 ~ 11:15</Text>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -86,44 +87,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     backgroundColor: "white",
   },
-  addBtnContainter: {
-    flex: 0.3,
-    //backgroundColor: "teal",
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    marginBottom: "2%",
+  house: {
+    marginTop: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  addBtn: {
-    width: 40,
-    height: 40,
-    marginRight: "2%",
+  title: {
+    position: "absolute",
+    top: 30,
+    fontSize: 20,
   },
-  classContainer: {
-    flex: 2,
-    //backgroundColor: "grey",
+  class: {
+    position: "absolute",
+    top: 75,
+    left: 20,
   },
-  modalView: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    paddingHorizontal: "5%",
+  classroom: {
+    position: "absolute",
+    top: 95,
+    left: 20,
   },
-  TwoBtnContainer: {
-    flex: 1,
-    alignItems: "flex-end",
-    justifyContent: "flex-start",
-  },
-  AddClassBtn: {
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 20,
-    marginBottom: "2%",
-  },
-  AddBtnText: {
-    fontSize: 14,
-  },
-  JoinClassBtn: {
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 20,
+  contents: {
+    position: "absolute",
+    top: 115,
+    left: 20,
   },
 });

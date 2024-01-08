@@ -44,6 +44,11 @@ export default function InitialPage() {
             <Text style={styles.signInText}>가입하기</Text>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("TeamScreen")}>
+          <View style={styles.signInBtn}>
+            <Text style={styles.signInText}>팀프로젝트 화면</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
