@@ -15,8 +15,9 @@ import {
   onAuthStateChanged,
   signInWithCredential,
 } from "firebase/auth";
+
 import { auth } from "./firebaseConfig";
-import AsyncStorabe from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 WebBroswer.maybeCompleteAuthSession();
 
 //<Stack.Screen name="LoadingScreen" component={LoadingScreen} ></Stack.Screen>
@@ -26,18 +27,17 @@ export default function App() {
   const [userInfo, setUserInfo] = React.useState();
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId:
-      "275749154152-h8o0m1i3e3lvbihh13n9qg5otfp0g7n2.apps.googleusercontent.com",
+      "275749154152-rj94fnmonq0fn9ucnaaarmqt39pjc0gr.apps.googleusercontent.com",
     androidClientId:
-      "275749154152-rtfsem9p0hn2t3ei5t5805shogubkdr7.apps.googleusercontent.com",
+      "275749154152-3qpjn6h3ptbbhj6ln6vl104boq9eh3k5.apps.googleusercontent.com",
   });
 
   React.useEffect(() => {
-    if (response?.type == "sucess") {
+    if (response?.type == "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential);
     }
-    0;
   }, [response]);
   return <SigninScreen promptAsync={promptAsync} />;
   /*<return (

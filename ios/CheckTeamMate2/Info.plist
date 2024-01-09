@@ -27,6 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>CheckTeamMate2</string>
           <string>com.jineous.CheckTeamMate2</string>
         </array>
       </dict>

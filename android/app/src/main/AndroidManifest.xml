@@ -25,6 +25,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="CheckTeamMate2"/>
         <data android:scheme="com.jineous.CheckTeamMate2"/>
         <data android:scheme="exp+checkteammate2"/>
       </intent-filter>
